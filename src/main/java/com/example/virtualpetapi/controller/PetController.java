@@ -51,8 +51,8 @@ public class PetController {
 
     @PostMapping("/new")
     public ResponseEntity<VirtualPet> addPet(@RequestBody VirtualPet pet) {
-        VirtualPet savedPet = virtualPetRepo.save(pet);
-        return new ResponseEntity<>(savedPet, HttpStatus.CREATED);
+        VirtualPet virtualPet = new VirtualPet(pet.getName());
+        return new ResponseEntity<>(virtualPetRepo.save(virtualPet),HttpStatus.OK);
     }
 
     @PutMapping("edit/{id}")
@@ -61,10 +61,12 @@ public class PetController {
                 .map(existingPet -> {
                     if (updatedPet.getName() != null)
                         existingPet.setName(updatedPet.getName());
-                   // if (updatedPet.getModel() != null)
-                   //     existingPet.setMake(updatedPet.getMake());
-                   // if (updatedPet.getModel() != null)
-                   //     existingPet.setModel(updatedPet.getModel());
+                    if (updatedPet.getHunger() != 0)
+                        existingPet.setHunger(updatedPet.getHunger());
+                    if (updatedPet.getThirst() != 0)
+                        existingPet.setThirst(updatedPet.getThirst());
+                    if (updatedPet.getEnergy() != 0)
+                        existingPet.setEnergy(updatedPet.getEnergy());
                     VirtualPet savedPet = virtualPetRepo.save(existingPet);
                     return new ResponseEntity<>(savedPet, HttpStatus.OK);
                 }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
